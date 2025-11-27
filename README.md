@@ -1,64 +1,114 @@
-<p align="center"><a href="https://laravel.com" target="_blank"><img src="https://raw.githubusercontent.com/laravel/art/master/logo-lockup/5%20SVG/2%20CMYK/1%20Full%20Color/laravel-logolockup-cmyk-red.svg" width="400"></a></p>
+# Analisis Konsep MVC pada Direktori Laravel 11
 
-<p align="center">
-<a href="https://travis-ci.org/laravel/framework"><img src="https://travis-ci.org/laravel/framework.svg" alt="Build Status"></a>
-<a href="https://packagist.org/packages/laravel/framework"><img src="https://img.shields.io/packagist/dt/laravel/framework" alt="Total Downloads"></a>
-<a href="https://packagist.org/packages/laravel/framework"><img src="https://img.shields.io/packagist/v/laravel/framework" alt="Latest Stable Version"></a>
-<a href="https://packagist.org/packages/laravel/framework"><img src="https://img.shields.io/packagist/l/laravel/framework" alt="License"></a>
-</p>
+Laravel 11 menggunakan arsitektur **MVC (Model–View–Controller)** sebagai pola utama untuk memisahkan logika aplikasi. Struktur direktori Laravel membantu pengembang menjaga kode tetap bersih, rapi, modular, dan mudah dipelihara.
 
-## About Laravel
+---
 
-Laravel is a web application framework with expressive, elegant syntax. We believe development must be an enjoyable and creative experience to be truly fulfilling. Laravel takes the pain out of development by easing common tasks used in many web projects, such as:
+## 1. **Model (app/Models)**
+Model mewakili **lapisan data** dan berfungsi sebagai penghubung antara aplikasi dan database melalui **Eloquent ORM**.
 
-- [Simple, fast routing engine](https://laravel.com/docs/routing).
-- [Powerful dependency injection container](https://laravel.com/docs/container).
-- Multiple back-ends for [session](https://laravel.com/docs/session) and [cache](https://laravel.com/docs/cache) storage.
-- Expressive, intuitive [database ORM](https://laravel.com/docs/eloquent).
-- Database agnostic [schema migrations](https://laravel.com/docs/migrations).
-- [Robust background job processing](https://laravel.com/docs/queues).
-- [Real-time event broadcasting](https://laravel.com/docs/broadcasting).
+### **Lokasi Direktori**
+```
+app/
+ └── Models/
+```
 
-Laravel is accessible, powerful, and provides tools required for large, robust applications.
+### **Peran Model**
+- Berinteraksi dengan database (select, insert, update, delete).
+- Mengatur relasi antar tabel (hasMany, belongsTo, dll).
+- Menyediakan fitur accessor, mutator, casting, dan query scope.
+- Menangani logika yang berhubungan dengan data.
 
-## Learning Laravel
+### **Contoh Model**
+```php
+class Product extends Model
+{
+    protected $fillable = ['name', 'price'];
+}
+```
 
-Laravel has the most extensive and thorough [documentation](https://laravel.com/docs) and video tutorial library of all modern web application frameworks, making it a breeze to get started with the framework.
+---
 
-If you don't feel like reading, [Laracasts](https://laracasts.com) can help. Laracasts contains over 2000 video tutorials on a range of topics including Laravel, modern PHP, unit testing, and JavaScript. Boost your skills by digging into our comprehensive video library.
+## 2. **View (resources/views)**
+View merupakan **lapisan presentasi** yang ditampilkan kepada pengguna menggunakan Blade Template Engine.
 
-## Laravel Sponsors
+### **Lokasi Direktori**
+```
+resources/
+ └── views/
+```
 
-We would like to extend our thanks to the following sponsors for funding Laravel development. If you are interested in becoming a sponsor, please visit the Laravel [Patreon page](https://patreon.com/taylorotwell).
+### **Peran View**
+- Menampilkan UI berbasis Blade.
+- Merender data yang dikirim dari Controller.
+- Menggunakan directive Blade seperti `@if`, `@foreach`, `@include`, dan komponen Blade.
 
-### Premium Partners
+### **Contoh View (Blade)**
+```blade
+<h1>{{ $product->name }}</h1>
+<p>Harga: {{ $product->price }}</p>
+```
 
-- **[Vehikl](https://vehikl.com/)**
-- **[Tighten Co.](https://tighten.co)**
-- **[Kirschbaum Development Group](https://kirschbaumdevelopment.com)**
-- **[64 Robots](https://64robots.com)**
-- **[Cubet Techno Labs](https://cubettech.com)**
-- **[Cyber-Duck](https://cyber-duck.co.uk)**
-- **[Many](https://www.many.co.uk)**
-- **[Webdock, Fast VPS Hosting](https://www.webdock.io/en)**
-- **[DevSquad](https://devsquad.com)**
-- **[Curotec](https://www.curotec.com/services/technologies/laravel/)**
-- **[OP.GG](https://op.gg)**
-- **[WebReinvent](https://webreinvent.com/?utm_source=laravel&utm_medium=github&utm_campaign=patreon-sponsors)**
-- **[Lendio](https://lendio.com)**
+---
 
-## Contributing
+## 3. **Controller (app/Http/Controllers)**
+Controller adalah **lapisan logika aplikasi** yang mengatur alur request dan response, serta menghubungkan Model dan View.
 
-Thank you for considering contributing to the Laravel framework! The contribution guide can be found in the [Laravel documentation](https://laravel.com/docs/contributions).
+### **Lokasi Direktori**
+```
+app/
+ └── Http/
+     └── Controllers/
+```
 
-## Code of Conduct
+### **Peran Controller**
+- Mengambil dan memproses request dari user.
+- Mengambil data dari Model.
+- Mengirim data ke View.
+- Menjalankan validasi input.
+- Mengatur proses CRUD dan sebagian logic bisnis.
 
-In order to ensure that the Laravel community is welcoming to all, please review and abide by the [Code of Conduct](https://laravel.com/docs/contributions#code-of-conduct).
+### **Contoh Controller**
+```php
+class ProductController extends Controller
+{
+    public function show($id)
+    {
+        $product = Product::findOrFail($id);
+        return view('product.show', compact('product'));
+    }
+}
+```
 
-## Security Vulnerabilities
+---
 
-If you discover a security vulnerability within Laravel, please send an e-mail to Taylor Otwell via [taylor@laravel.com](mailto:taylor@laravel.com). All security vulnerabilities will be promptly addressed.
+# Alur Kerja MVC di Laravel 11
+1. User mengirim request ke aplikasi.
+2. Route menentukan controller mana yang dijalankan.
+3. Controller memanggil Model untuk mengambil atau memproses data.
+4. Controller mengirim data tersebut ke View.
+5. View dirender menjadi HTML.
+6. HTML dikembalikan ke user sebagai response.
 
-## License
+---
 
-The Laravel framework is open-sourced software licensed under the [MIT license](https://opensource.org/licenses/MIT).
+# Direktori Pendukung dalam Arsitektur MVC
+Selain folder inti MVC, Laravel memiliki beberapa direktori penting lain:
+
+| Direktori | Fungsi |
+|----------|--------|
+| `routes/` | Menentukan endpoint dan menghubungkannya dengan controller. |
+| `database/migrations/` | Mengatur struktur tabel database. |
+| `database/seeders/` | Mengisi data awal. |
+| `app/Http/Middleware/` | Menyaring request (auth, throttle, dll). |
+| `resources/js` & `resources/css` | Asset frontend. |
+
+---
+
+# Kesimpulan
+- **Model** mengatur data dan berinteraksi dengan database.
+- **View** menampilkan UI untuk pengguna.
+- **Controller** mengatur alur aplikasi dan menghubungkan Model ↔ View.
+
+Struktur direktori Laravel 11 memudahkan implementasi arsitektur MVC secara bersih dan scalable.
+
